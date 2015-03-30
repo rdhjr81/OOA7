@@ -1,0 +1,9 @@
+1;149.99;16GB Ballistix SDRAM;
+2;599.99;Windows Tablet 8GB;
+3;9.99;Michael Jackson Greatest Hits CD;
+4;399.99;Playstation 4;
+5;149.99;FitBit;
+6;69.99;Dynex Soundbar System;
+7;65.99;Apple TV;
+8;14.99;The Hobbit DVD;
+9;1999.99; Panasonic 50" HDTV;
