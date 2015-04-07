@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
+import ooa7.Item;
 
 /**
  *
@@ -40,7 +41,7 @@ public class ItemList {
                 
                 itemDesc = rdr.next(); 
                 
-                System.out.println(a + " " + b + " " + itemDesc);
+                //System.out.println(a + " " + b + " " + itemDesc);
                 itemNumber = Integer.parseInt(a);
                 itemPrice = Float.parseFloat(b);
                 
@@ -60,32 +61,10 @@ public class ItemList {
         public static ItemList getItemList(){
             return new ItemList();
         }
+        public ArrayList<Item> getItemListForIterator(){
+            return itemList;
+        }
     
-    public class Item{
-         private final int itemNumber;
-         private final String itemDesc;
-         private final float itemPrice;
-
-        public int getItemNumber() {
-            return itemNumber;
-        }
-
-        public String getItemDesc() {
-            return itemDesc;
-        }
-
-        public float getItemPrice() {
-            return itemPrice;
-        }
-
-        public Item(int itemNumber, String itemDesc, float itemPrice) {
-            this.itemNumber = itemNumber;
-            this.itemDesc = itemDesc;
-            this.itemPrice = itemPrice;
-        }
-         
-         
-    }
     
     public void displayItems(){
         String itemNumberLabel ="Item Number";
@@ -96,12 +75,16 @@ public class ItemList {
         int lenOfItemDescLabel = itemDescLabel.length();
         
         
-        
+        System.out.println("\n\n\n************************************************");
+        System.out.println("****************ITEM LIST***********************");
         System.out.printf("%" + lenOfItemNumLabel + "s %" + lenOfItemPriceLabel + "s %" + 
                 lenOfItemDescLabel + "s\n", itemNumberLabel, itemPriceLabel, itemDescLabel);
         for(Item x: itemList){
             System.out.printf("%-" + lenOfItemNumLabel + "d $%-" + lenOfItemPriceLabel + 
                     ".2f %-25s\n",x.getItemNumber(),( x.getItemPrice()),x.getItemDesc());    
         }
+        System.out.println("************************************************");
+        System.out.println("************************************************\n\n\n");
+        
     }
 }

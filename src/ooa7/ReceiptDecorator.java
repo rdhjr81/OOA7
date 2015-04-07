@@ -9,15 +9,15 @@ package ooa7;
  *
  * @author Robert
  */
-public abstract class TicketDecorator extends Component{
-    private Component trailComponent;
+public abstract class ReceiptDecorator extends Receipt{
+    private Receipt trailReceipt;
     
-    public TicketDecorator(Component trail){
-        trailComponent = trail;    
+    public ReceiptDecorator(Receipt trail){
+        this.trailReceipt = trail;    
     }
     public void callTrail(){
-        if(trailComponent != null){
-            trailComponent.printTicket();
+        if(trailReceipt != null){
+            trailReceipt.printReceipt();
         }
     }
 }

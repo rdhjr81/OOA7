@@ -13,7 +13,9 @@ import java.util.Scanner;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-
+import ooa7.ItemList;
+import ooa7.Item;
+import java.util.ArrayList;
 /**
  *
  * @author Robert
@@ -28,13 +30,17 @@ public class StoreClient {
     public StoreClient(){
         try{
             Scanner storeConfig = new Scanner(new File(".\\config\\store_config.TXT")).useDelimiter(";");
-            storeAddress = storeConfig.next();
-            storeNumber = storeConfig.next();
-            storeTelephone = storeConfig.next();
             storeState = storeConfig.next();
+            storeNumber = storeConfig.next();
+            storeAddress = storeConfig.next();
+            storeTelephone = storeConfig.next();
             
-            System.out.println(storeAddress + storeNumber + storeTelephone + storeState);
             
+            System.out.println("Store state: " + storeState);
+            System.out.println("Store Number: " + storeNumber);
+            System.out.println("Store Address: " + storeAddress);
+            System.out.println("Store Telephone: " + storeTelephone);
+            System.out.println("\n\n\n");
             todaysDate = new GregorianCalendar();
         }
         catch(FileNotFoundException e){
@@ -45,31 +51,24 @@ public class StoreClient {
     public StoreClient(String configFileLocation){ //allow user to enter a specfic config file for test purposes
         try{
             Scanner storeConfig = new Scanner(new File(configFileLocation)).useDelimiter(";");
-            storeAddress = storeConfig.next();
-            storeNumber = storeConfig.next();
-            storeTelephone = storeConfig.next();
             storeState = storeConfig.next();
+            storeNumber = storeConfig.next();
+            storeAddress = storeConfig.next();
+            storeTelephone = storeConfig.next();
             
-            System.out.println(storeAddress + storeNumber + storeTelephone + storeState);
+            /*
+            System.out.println("Store state: " + storeState);
+            System.out.println("Store Number: " + storeNumber);
+            System.out.println("Store Address: " + storeAddress);
+            System.out.println("Store Telephone: " + storeTelephone);
+            */
         }
         catch(FileNotFoundException e){
             System.err.println("config file not found");
         }
     }
     
-    public GregorianCalendar setTodaysDate(){
-        Scanner in = new Scanner(System.in);
-        System.out.println("Enter todays date: Day Month Year");
-        System.out.println("Ex: 9 12 2015");
-        int day = 0, month = 0, year = 0;
-        
-        day = in.nextInt();
-        month = in.nextInt();
-        year = in.nextInt();
-        
-        GregorianCalendar todaysDate = new GregorianCalendar(year, month, day);
-        return todaysDate;
-    }
+
     
     public void displayMenu(){
         System.out.println("1 - Start new Receipt");
@@ -79,46 +78,48 @@ public class StoreClient {
     
     public void startTransaction(){
         
-        GregorianCalendar todaysDate = setTodaysDate();
-        
         Scanner in = new Scanner(System.in);
-        int menuNumber;
-        displayMenu();
-        menuNumber = in.nextInt();
         
-        switch(menuNumber){
-            case 1:
-                Receipt r = new Receipt();
-            break;
-            case 2:
-                int itemNumber;
+        //get todays date
+        PurchasedItems pList = new PurchasedItems();
+        pList.setTodaysDate();
+        pList.setState(storeState);
+        
+        //System.out.println("Store state set to: " + storeState);
+        
+        int itemNumber;
                 
-                if (r == null){
-                     r = new Receipt();
-                } 
-                else{
-                    ItemList y = ItemList.getItemList();
-                    y.displayItems();
-                    System.out.println("Enter item numbers to add to receipt");
-                    while(in.hasNextInt()){
-                        itemNumber = in.nextInt();
-                        for(Iterator<Item> iter = y.iterator(); iter.hasNext();){
-                            Job y = iter.next();
-                            if(y.getArrival_time() == currentTime){
-                                rrQueue.add(new Job(y));
-                                System.out.println("Current time: " + currentTime);
-                                System.out.println("Job arrived at " + y.getArrival_time() + " with burst time of " + y.getBurst_time());
-                                iter.remove();
-                        }
-            }
-    }
-                    }
+        ItemList y = ItemList.getItemList();
+
+        y.displayItems();
+        
+        System.out.println("Enter item numbers to add to receipt, q to exit");
+        
+        while(in.hasNextInt()){
+            //get item number
+            itemNumber = in.nextInt();
+            for(Iterator<Item> iter = y.getItemListForIterator().iterator(); iter.hasNext();){
+                Item x = iter.next();
+                if(x.getItemNumber()== itemNumber){
+                    pList.addToPurchasedList(new Item(x));
+                    //System.out.println("Added item: " + x.getItemDesc() + " to receipt"); 
                 }
-            break;
-            case 3:
-            break;    
-            default:
-            
+
+            }
+
         }
+        //System.out.println("Subtotal: " + pList.getSubtotal());
+            
+        ReceiptFactory r = new ReceiptFactory(pList);
+        Receipt bestBuyReceipt =  r.getReceipt();
+        printStoreInfo();
+        bestBuyReceipt.printReceipt();
     }
+    
+    
+    public void printStoreInfo(){
+        System.out.println("BestBuy Store: " + storeNumber);
+        System.out.println(storeAddress + " " + storeState);
+        System.out.println("Store Telephone: " + storeTelephone);
+    }    
 }
